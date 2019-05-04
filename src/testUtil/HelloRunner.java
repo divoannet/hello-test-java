@@ -36,14 +36,24 @@ public class HelloRunner {
         List<Method> afters = getAnnotatedMethods(testedClass, After.class);
 
         try {
-            var c = testedClass.getDeclaredConstructor().newInstance();
-
             for (Method testCase : testCases) {
+
+                var c = testedClass.getDeclaredConstructor().newInstance();
+
                 runServiceMethods(befores, c);
+                runTestCaseMethod(testCase, c);
                 runServiceMethods(afters, c);
             }
 
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void runTestCaseMethod(Method testCase, Object obj) {
+        try {
+            testCase.invoke(obj);
+        } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
     }
