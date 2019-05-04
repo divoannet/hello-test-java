@@ -16,16 +16,16 @@ public class HelloClassTests {
 
     @TestCase
     public void checkAge() {
-        System.out.println("Test1");
+        System.out.println("Test2");
     }
 
     @TestCase
     public void checkId() {
-        System.out.println("Test1");
+        System.out.println("Test3");
     }
 
     @After
     public void clean() {
-        System.out.println("testUtil.After");
+        System.out.println("After");
     }
 }

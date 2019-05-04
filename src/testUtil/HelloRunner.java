@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 
 public class HelloRunner {
     private String ANSI_RED = "\u001B[31m";
-    String ANSI_GREEN = "\u001B[32m";
+    private String ANSI_GREEN = "\u001B[32m";
     private String ANSI_RESET = "\u001B[0m";
 
     List<Object> errors = new ArrayList<Object>();
@@ -23,38 +23,45 @@ public class HelloRunner {
 
         List<Class<?>> testedClasses = getClasses(args);
 
-        for (Class testedClass : testedClasses) {
+        for (Class<? extends Object> testedClass : testedClasses) {
             runClassTest(testedClass);
         }
 
         return null;
     }
 
-    private void runClassTest(Class testedClass) {
+    private void runClassTest(Class<? extends Object> testedClass) {
         List<Method> testCases = getAnnotatedMethods(testedClass, TestCase.class);
         List<Method> befores = getAnnotatedMethods(testedClass, Before.class);
         List<Method> afters = getAnnotatedMethods(testedClass, After.class);
 
-        for (Method testCase : testCases) {
-            runServiceMethods(befores);
-            runServiceMethods(afters);
+        try {
+            var c = testedClass.getDeclaredConstructor().newInstance();
+
+            for (Method testCase : testCases) {
+                runServiceMethods(befores, c);
+                runServiceMethods(afters, c);
+            }
+
+        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            e.printStackTrace();
         }
     }
 
-    private void runServiceMethods(List<Method> methods) {
+    private void runServiceMethods(List<Method> methods, Object obj) {
         for (Method method : methods) {
             try {
-                method.invoke(null);
-            } catch (InvocationTargetException | IllegalAccessException e) {
+                method.invoke(obj);
+            } catch (IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    private List<Method> getAnnotatedMethods(Class testedClass, Class<? extends Annotation> annotation) {
+    private List<Method> getAnnotatedMethods(Class<? extends Object> testedClass, Class<? extends Annotation> annotation) {
         List<Method> result = new ArrayList<Method>();
 
-        Method[] methods = testedClass.getDeclaredMethods();
+        Method[] methods = testedClass.getMethods();
 
         for (Method method : methods) {
             Annotation a = method.getAnnotation(annotation);
