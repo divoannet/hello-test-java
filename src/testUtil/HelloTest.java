@@ -6,9 +6,9 @@ public class HelloTest {
      * asserts
      */
 
-    protected static void isTrue(boolean condition, String message) {
+    public static void isTrue(boolean condition) {
         if (!condition) {
-            fail(message);
+            fail("Excepted true but found " + condition);
         }
     }
 

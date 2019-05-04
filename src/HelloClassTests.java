@@ -1,5 +1,7 @@
 import testUtil.*;
 
+import static testUtil.HelloTest.isTrue;
+
 public class HelloClassTests {
 
     Object[] data = new Object[1];
@@ -12,6 +14,7 @@ public class HelloClassTests {
     @TestCase
     public void checkName() {
         System.out.println("Test1");
+        isTrue(false);
     }
 
     @TestCase

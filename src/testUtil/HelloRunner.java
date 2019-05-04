@@ -11,7 +11,8 @@ public class HelloRunner {
     private String ANSI_GREEN = "\u001B[32m";
     private String ANSI_RESET = "\u001B[0m";
 
-    List<Object> errors = new ArrayList<Object>();
+    int passedCount = 0;
+    int failedCount = 0;
 
     public static void main(String[] args) {
         Object result = new HelloRunner().run(args);
@@ -35,24 +36,34 @@ public class HelloRunner {
         List<Method> befores = getAnnotatedMethods(testedClass, Before.class);
         List<Method> afters = getAnnotatedMethods(testedClass, After.class);
 
-        try {
-            for (Method testCase : testCases) {
-
+        for (Method testCase : testCases) {
+            try {
                 var c = testedClass.getDeclaredConstructor().newInstance();
 
                 runServiceMethods(befores, c);
                 runTestCaseMethod(testCase, c);
                 runServiceMethods(afters, c);
-            }
 
-        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            e.printStackTrace();
+                passedCount += 1;
+            } catch (AssertionError e) {
+                failedCount += 1;
+            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
         }
+
+        System.out.println(" ");
+        System.out.println("-------------");
+        System.out.println("Test finished");
+        System.out.println(ANSI_GREEN + "passed: " + passedCount + ANSI_RESET);
+        System.out.println(ANSI_RED + "failed: " + passedCount + ANSI_RESET);
     }
 
     private void runTestCaseMethod(Method testCase, Object obj) {
         try {
             testCase.invoke(obj);
+        } catch (AssertionError e) {
+            throw new AssertionError(e);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -62,6 +73,8 @@ public class HelloRunner {
         for (Method method : methods) {
             try {
                 method.invoke(obj);
+            } catch (AssertionError e) {
+                throw new AssertionError(e);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
