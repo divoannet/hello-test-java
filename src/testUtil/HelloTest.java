@@ -2,15 +2,21 @@ package testUtil;
 
 public class HelloTest {
 
-    public static void main(String[] args) {
-        System.out.println(Before.class);
-    }
+    /**
+     * asserts
+     */
 
     protected static void isTrue(boolean condition, String message) {
         if (!condition) {
             fail(message);
         }
     }
+
+    /* TODO: isFalse */
+    /* TODO: isNull */
+    /* TODO: isNotNull */
+    /* TODO: isEqual */
+    /* TODO: isNotEqual */
 
     private static void fail(String message) {
         String str = message != null ?  message : "Error";

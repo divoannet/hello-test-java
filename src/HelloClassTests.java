@@ -1,9 +1,6 @@
-import testUtil.After;
-import testUtil.Before;
-import testUtil.HelloTest;
-import testUtil.TestCase;
+import testUtil.*;
 
-public class HelloClassTests extends HelloTest {
+public class HelloClassTests {
 
     Object[] data = new Object[1];
 
@@ -25,12 +22,10 @@ public class HelloClassTests extends HelloTest {
     @TestCase
     public void checkId() {
         System.out.println("Test1");
-        isTrue(true, "lol");
     }
 
     @After
     public void clean() {
         System.out.println("testUtil.After");
-        isTrue(false, "Oh no!");
     }
 }
