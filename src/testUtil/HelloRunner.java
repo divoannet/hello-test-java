@@ -51,7 +51,7 @@ public class HelloRunner {
             } catch (AssertionError | InvocationTargetException e) {
                 failedCount += 1;
                 System.err.println(ANSI_RED + "- " +  testCase + ANSI_RESET);
-                System.err.println(ANSI_RED + "Cause: " + e.toString() + ANSI_RESET); // TODO: output error message
+                System.err.println(ANSI_RED + "Cause: " + e.getCause() + ANSI_RESET);
             } catch (NoSuchMethodException | IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();
             }
@@ -68,7 +68,7 @@ public class HelloRunner {
         try {
             testCase.invoke(obj);
         } catch (AssertionError | InvocationTargetException e) {
-            throw new AssertionError(e);
+            throw new AssertionError(e.getCause());
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -79,7 +79,7 @@ public class HelloRunner {
             try {
                 method.invoke(obj);
             } catch (AssertionError | InvocationTargetException e) {
-                throw new AssertionError(e);
+                throw new AssertionError(e.getCause());
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }

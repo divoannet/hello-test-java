@@ -1,6 +1,6 @@
 import testUtil.*;
 
-import static testUtil.HelloTest.isTrue;
+import static testUtil.HelloTest.*;
 
 public class HelloClassTests {
 
@@ -14,7 +14,7 @@ public class HelloClassTests {
     @TestCase
     public void checkName() {
         System.out.println("Test1");
-        isTrue(false);
+        isEqual(14, 12);
     }
 
     @TestCase
