@@ -45,26 +45,28 @@ public class HelloRunner {
                 runServiceMethods(afters, c);
 
                 passedCount += 1;
-            } catch (AssertionError e) {
+                System.err.println(ANSI_GREEN + "+ " +  testCase + ANSI_RESET);
+            } catch (AssertionError | InvocationTargetException e) {
                 failedCount += 1;
-            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                System.err.println(ANSI_RED + "- " +  testCase + ANSI_RESET);
+            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();
             }
         }
 
         System.out.println(" ");
-        System.out.println("-------------");
-        System.out.println("Test finished");
+        System.out.println("--------------");
+        System.out.println("Tests finished");
         System.out.println(ANSI_GREEN + "passed: " + passedCount + ANSI_RESET);
-        System.out.println(ANSI_RED + "failed: " + passedCount + ANSI_RESET);
+        System.out.println(ANSI_RED + "failed: " + failedCount + ANSI_RESET);
     }
 
     private void runTestCaseMethod(Method testCase, Object obj) {
         try {
             testCase.invoke(obj);
-        } catch (AssertionError e) {
+        } catch (AssertionError | InvocationTargetException e) {
             throw new AssertionError(e);
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
     }
@@ -73,9 +75,9 @@ public class HelloRunner {
         for (Method method : methods) {
             try {
                 method.invoke(obj);
-            } catch (AssertionError e) {
+            } catch (AssertionError | InvocationTargetException e) {
                 throw new AssertionError(e);
-            } catch (IllegalAccessException | InvocationTargetException e) {
+            } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
