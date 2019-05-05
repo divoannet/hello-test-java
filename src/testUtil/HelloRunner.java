@@ -6,6 +6,8 @@ import java.util.List;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
+import static java.lang.System.out;
+
 public class HelloRunner {
     private String ANSI_RED = "\u001B[31m";
     private String ANSI_GREEN = "\u001B[32m";
@@ -19,8 +21,8 @@ public class HelloRunner {
     }
 
     Object run(String... args) {
-        System.out.println("Start tests");
-        System.out.println(" ");
+        out.println("Start tests");
+        out.println(" ");
 
         List<Class<?>> testedClasses = getClasses(args);
 
@@ -32,7 +34,7 @@ public class HelloRunner {
     }
 
     private void runClassTest(Class<? extends Object> testedClass) {
-        List<Method> testCases = getAnnotatedMethods(testedClass, TestCase.class);
+        List<Method> testCases = getAnnotatedMethods(testedClass, TestCase.class); // TODO: run in multiply streams
         List<Method> befores = getAnnotatedMethods(testedClass, Before.class);
         List<Method> afters = getAnnotatedMethods(testedClass, After.class);
 
@@ -45,26 +47,29 @@ public class HelloRunner {
                 runServiceMethods(afters, c);
 
                 passedCount += 1;
-            } catch (AssertionError e) {
+                System.err.println(ANSI_GREEN + "+ " +  testCase + ANSI_RESET);
+            } catch (AssertionError | InvocationTargetException e) {
                 failedCount += 1;
-            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                System.err.println(ANSI_RED + "- " +  testCase + ANSI_RESET);
+                System.err.println(ANSI_RED + "Cause: " + e.toString() + ANSI_RESET); // TODO: output error message
+            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();
             }
         }
 
-        System.out.println(" ");
-        System.out.println("-------------");
-        System.out.println("Test finished");
-        System.out.println(ANSI_GREEN + "passed: " + passedCount + ANSI_RESET);
-        System.out.println(ANSI_RED + "failed: " + passedCount + ANSI_RESET);
+        out.println(" ");
+        out.println("--------------");
+        out.println("Tests finished");
+        out.println(ANSI_GREEN + "passed: " + passedCount + ANSI_RESET);
+        out.println(ANSI_RED + "failed: " + failedCount + ANSI_RESET);
     }
 
     private void runTestCaseMethod(Method testCase, Object obj) {
         try {
             testCase.invoke(obj);
-        } catch (AssertionError e) {
+        } catch (AssertionError | InvocationTargetException e) {
             throw new AssertionError(e);
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
     }
@@ -73,9 +78,9 @@ public class HelloRunner {
         for (Method method : methods) {
             try {
                 method.invoke(obj);
-            } catch (AssertionError e) {
+            } catch (AssertionError | InvocationTargetException e) {
                 throw new AssertionError(e);
-            } catch (IllegalAccessException | InvocationTargetException e) {
+            } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
@@ -103,7 +108,7 @@ public class HelloRunner {
             try {
                 testedClasses.add(getClass(arg));
             } catch (ClassNotFoundException e) {
-                System.out.println(ANSI_RED + "There is no such class as " + arg + ANSI_RESET);
+                out.println(ANSI_RED + "There is no such class as " + arg + ANSI_RESET);
             }
         }
 
