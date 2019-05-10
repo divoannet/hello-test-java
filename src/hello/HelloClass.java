@@ -1,3 +1,5 @@
+package hello;
+
 public class HelloClass {
 
     public int id;
