@@ -117,13 +117,19 @@ public class HelloRunner {
                 testedClasses.add(getClass(arg));
             } catch (ClassNotFoundException e) {
                 out.println(ANSI_RED + "There is no such class as " + arg + ANSI_RESET);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
             }
         }
 
         return testedClasses;
     }
 
-    private Class<?> getClass(String arg) throws ClassNotFoundException {
-        return Class.forName(arg);
+    private Class<?> getClass(String arg) throws ClassNotFoundException, MalformedURLException {
+        File file = new File(System.getProperty("java.class.path"));
+        URL url = file.toURI().toURL();
+        URL[] urls = new URL[]{url};
+        ClassLoader cl = new URLClassLoader(urls);
+        return cl.loadClass(arg);
     }
 }
