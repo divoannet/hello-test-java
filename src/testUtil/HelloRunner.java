@@ -1,12 +1,18 @@
 package testUtil;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import static java.lang.System.out;
+import static java.lang.System.setOut;
 
 public class HelloRunner {
     private String ANSI_RED = "\u001B[31m";
@@ -24,7 +30,9 @@ public class HelloRunner {
         out.println("Start tests");
         out.println(" ");
 
-        List<Class<?>> testedClasses = getClasses(args);
+        int streamCount = Integer.parseInt(args[0]);
+        List<Class<?>> testedClasses = getClasses(Arrays.copyOfRange(args, 1, args.length));
+
 
         for (Class<? extends Object> testedClass : testedClasses) {
             runClassTest(testedClass);

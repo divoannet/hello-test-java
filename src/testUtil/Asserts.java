@@ -1,6 +1,6 @@
 package testUtil;
 
-public class HelloTest {
+public class Asserts {
 
     /**
      * asserts

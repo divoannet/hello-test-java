@@ -1,6 +1,6 @@
 import testUtil.*;
 
-import static testUtil.HelloTest.*;
+import static testUtil.Asserts.*;
 
 public class HelloClassTests {
 
