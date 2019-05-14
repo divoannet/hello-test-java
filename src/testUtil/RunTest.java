@@ -28,12 +28,9 @@ public class RunTest {
 
             while (true) {
                 synchronized (queue) {
-                    while (queue.isEmpty()) {
-                        try {
-                            queue.wait();
-                        } catch (InterruptedException e) {}
+                    if (queue.isEmpty()) {
+                        return;
                     }
-
                     r = queue.removeFirst();
                 }
 
