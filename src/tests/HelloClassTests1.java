@@ -1,3 +1,5 @@
+package tests;
+
 import testUtil.*;
 
 import static testUtil.Asserts.*;
@@ -11,7 +13,7 @@ public class HelloClassTests1 {
         System.out.println("[1] BeforeTest");
     }
 
-    @TestCase
+    @TestCase()
     public void checkName() {
         System.out.println("[1] Test1");
         isEqual(14, 12);

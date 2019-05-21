@@ -11,8 +11,8 @@ public class RunTest {
     private final LinkedList<Class<?>> queue;
     private final TestThread[] threads;
 
-    public RunTest(List<Class<?>> classList, int threadsCount) {
-        this.queue = (LinkedList<Class<?>>) classList;
+    public RunTest(LinkedList<Class<?>> classList, int threadsCount) {
+        this.queue = classList;
         this.threads = new TestThread[threadsCount];
 
         for (int i = 0; i < threadsCount; i++) {

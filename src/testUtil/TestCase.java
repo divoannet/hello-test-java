@@ -9,5 +9,8 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD})
 public @interface TestCase {
 
+    static class DefaultClass extends Throwable {}
+
+    Class<? extends Throwable> expected() default DefaultClass.class;
 
 }

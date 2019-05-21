@@ -1,20 +1,23 @@
+package tests;
+
+import hello.HelloClass;
 import testUtil.*;
 
-import static testUtil.Asserts.*;
 
 public class HelloClassTests2 {
 
-    Object[] data = new Object[2];
+    HelloClass data;
 
     @Before
     public void initData() {
         System.out.println("[2] BeforeTest");
+        data = new HelloClass(3, "New");
     }
 
     @TestCase
     public void checkName() {
         System.out.println("[2] Test1");
-        isEqual(14, 12);
+        System.out.println(data.name);
     }
 
     @TestCase

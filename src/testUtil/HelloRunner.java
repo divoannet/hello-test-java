@@ -2,7 +2,6 @@ package testUtil;
 
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 
 import static java.lang.System.out;
 
@@ -19,14 +18,14 @@ public class HelloRunner {
         out.println(" ");
 
         int streamCount = Integer.parseInt(args[0]);
-        List<Class<?>> testedClasses = getClasses(Arrays.copyOfRange(args, 1, args.length));
+        LinkedList<Class<?>> testedClasses = getClasses(Arrays.copyOfRange(args, 1, args.length));
 
         new RunTest(testedClasses, streamCount);
     }
 
 
-    private List<Class<?>> getClasses(String... args) {
-        List<Class<?>> testedClasses = new LinkedList<>();
+    private LinkedList<Class<?>> getClasses(String... args) {
+        LinkedList<Class<?>> testedClasses = new LinkedList<>();
 
         for (String arg : args) {
             try {
