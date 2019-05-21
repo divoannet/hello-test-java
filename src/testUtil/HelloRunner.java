@@ -17,8 +17,21 @@ public class HelloRunner {
         out.println("Start tests");
         out.println(" ");
 
-        int streamCount = Integer.parseInt(args[0]);
-        LinkedList<Class<?>> testedClasses = getClasses(Arrays.copyOfRange(args, 1, args.length));
+        int streamCount;
+        LinkedList<Class<?>> testedClasses;
+
+        try {
+            streamCount = Integer.parseInt(args[0]);
+            testedClasses = getClasses(Arrays.copyOfRange(args, 1, args.length));
+        } catch (NumberFormatException e) {
+            streamCount = 1;
+            testedClasses = getClasses(args);
+        }
+
+        if (testedClasses.size() == 0) {
+            out.println(ANSI_RED + "Wrong syntax: set at least 1 test class" +  ANSI_RESET);
+            return;
+        }
 
         new RunTest(testedClasses, streamCount);
     }

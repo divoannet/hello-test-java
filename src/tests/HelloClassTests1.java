@@ -1,5 +1,3 @@
-package tests;
-
 import testUtil.*;
 
 import static testUtil.Asserts.*;
