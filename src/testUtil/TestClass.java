@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.System.out;
+import static java.lang.System.setOut;
 
 public class TestClass {
     Class<?> testClass;
@@ -51,6 +52,7 @@ public class TestClass {
     }
 
     private void runTestCaseMethod(Method testCase, Object obj, int i) {
+        Class<? extends Throwable> exeption = getException(testCase);
         try {
             testCase.invoke(obj);
         } catch (AssertionError | InvocationTargetException e) {
@@ -58,6 +60,15 @@ public class TestClass {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    private Class<? extends Throwable> getException(Method testCase) {
+        TestCase annotation = testCase.getAnnotation(TestCase.class);
+        if (annotation == null || annotation.expected() == Exception.class) {
+            return null;
+        }
+
+        return annotation.expected();
     }
 
     private void runServiceMethods(List<Method> methods, Object obj) {

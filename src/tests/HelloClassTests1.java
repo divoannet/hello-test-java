@@ -17,9 +17,10 @@ public class HelloClassTests1 {
         isEqual(14, 12);
     }
 
-    @TestCase
+    @TestCase(expected = NumberFormatException.class)
     public void checkAge() {
         System.out.println("[1] Test2");
+        throw new NumberFormatException("wow");
     }
 
     @TestCase
