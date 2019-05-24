@@ -3,15 +3,19 @@ package testUtil;
 public class Result {
     public String name = "";
     public boolean success = true;
-    public String error = "";
+    public String message = "";
 
     public Result(String name) {
         this.name = name;
     }
 
-    public void setError(String error) {
+    public void setError(String message) {
         this.success = false;
-        this.error = error;
+        this.message = message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
 }

@@ -1,7 +1,6 @@
 package testUtil;
 
 import java.util.LinkedList;
-import java.util.List;
 
 public class RunTest {
     private String ANSI_RED = "\u001B[31m";
@@ -49,10 +48,13 @@ public class RunTest {
             for (Result result : results) {
                 if (result.success) {
                     output.append(ANSI_GREEN + "[+] " + result.name + " passed" + ANSI_RESET + "\n");
+                    if (!result.message.equals("")) {
+                        output.append(ANSI_GREEN + "message: " + result.message + ANSI_RESET + "\n");
+                    }
                     success += 1;
                 } else {
                     output.append(ANSI_RED + "[-] " + result.name + " failed" + ANSI_RESET+ "\n");
-                    output.append("Cause: " + result.error+ "\n");
+                    output.append("Cause: " + result.message + "\n");
                     failed += 1;
                 }
             }
