@@ -14,11 +14,11 @@ public class TestClass {
     private Result[] result;
     private List<TCase> testcases;
 
-    public TestClass(Class<?> testClass) {
+    TestClass(Class<?> testClass) {
         this.testClass = testClass;
     }
 
-    public Result[] run() {
+    Result[] run() {
         testcases = getTestCases(testClass);
         List<Method> befores = getAnnotatedMethods(testClass, Before.class);
         List<Method> afters = getAnnotatedMethods(testClass, After.class);
@@ -39,9 +39,13 @@ public class TestClass {
                 passedCount += 1;
             } catch (AssertionError e) {
                 failedCount += 1;
-                result[i].setError(e.getCause().toString());
-            } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-                e.printStackTrace();
+                result[i].setError(e.getMessage());
+            } catch (Throwable e) {
+                if (testCase.exception != null && testCase.exception.isAssignableFrom(e.getClass())) {
+                    result[i].setMessage("expected exception [" + e.getClass() + "]");
+                } else {
+                    e.printStackTrace();
+                }
             }
             i++;
         }
@@ -49,38 +53,23 @@ public class TestClass {
         return result;
     }
 
-    private void runTestCaseMethod(TCase testCase, Object obj, int i) {
+    private void runTestCaseMethod(TCase testCase, Object obj, int i) throws Throwable {
         try {
             testCase.method.invoke(obj);
-        } catch (AssertionError | InvocationTargetException e) {
-            // TODO: Where is my AssertionError? =(
-            if (testCase.exception != null) {
-                System.out.println(testCase.exception.isAssignableFrom(e.getClass()));
-            } else {
-                throw new AssertionError(e.getCause());
-            }
-        } catch (IllegalAccessException e) {
+        } catch (InvocationTargetException e) {
+            throw e.getTargetException();
+        } catch (Throwable e) {
             e.printStackTrace();
+            throw e;
         }
-    }
-
-    private Class<? extends Throwable> getException(Method testCase, int i) {
-        TestCase annotation = testCase.getAnnotation(TestCase.class);
-        if (annotation == null || annotation.expected() == TestCase.DefaultClass.class) {
-            return null;
-        }
-        result[i].setMessage("Expected exception: " + annotation.getClass().getName());
-        return annotation.expected();
     }
 
     private void runServiceMethods(List<Method> methods, Object obj) {
         for (Method method : methods) {
             try {
                 method.invoke(obj);
-            } catch (AssertionError | InvocationTargetException e) {
-                throw new AssertionError(e.getCause());
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
+            } catch (Throwable e) {
+                throw new Error(e);
             }
         }
     }
@@ -120,13 +109,13 @@ public class TestClass {
     }
 
     private class TCase {
-        public Method method;
-        public Class<? extends Throwable> exception;
-        public TCase(Method testCase) {
+        Method method;
+        Class<? extends Throwable> exception;
+        TCase(Method testCase) {
             this.method = testCase;
         }
 
-        public void setException(Class<? extends Throwable> exception) {
+        void setException(Class<? extends Throwable> exception) {
             this.exception = exception;
         }
     }

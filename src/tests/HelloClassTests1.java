@@ -26,6 +26,7 @@ public class HelloClassTests1 {
     @TestCase
     public void checkId() {
         System.out.println("[1] Test3");
+        throw new NumberFormatException("wow2");
     }
 
     @After
